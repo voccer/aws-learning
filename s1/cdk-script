@@ -1,0 +1,3 @@
+#! /bin/bash
+
+cdk bootstrap aws://214658890855/ap-northeast-1

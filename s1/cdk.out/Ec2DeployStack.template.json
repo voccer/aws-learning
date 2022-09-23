@@ -1,0 +1,147 @@
+{
+ "Resources": {
+  "ec2secgrp06AACBBC": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Ec2DeployStack/ec2-sec-grp",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/24",
+      "Description": "inbound SSH",
+      "FromPort": 22,
+      "IpProtocol": "tcp",
+      "ToPort": 22
+     }
+    ],
+    "VpcId": "vpc-12345"
+   },
+   "Metadata": {
+    "aws:cdk:path": "Ec2DeployStack/ec2-sec-grp/Resource"
+   }
+  },
+  "ec2instInstanceRole6A537961": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "unbiased_coder_instance"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Ec2DeployStack/ec2_inst/InstanceRole/Resource"
+   }
+  },
+  "ec2instInstanceProfile7D41EF08": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "ec2instInstanceRole6A537961"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "Ec2DeployStack/ec2_inst/InstanceProfile"
+   }
+  },
+  "ec2inst429A51B9": {
+   "Type": "AWS::EC2::Instance",
+   "Properties": {
+    "AvailabilityZone": "dummy1a",
+    "IamInstanceProfile": {
+     "Ref": "ec2instInstanceProfile7D41EF08"
+    },
+    "ImageId": "ami-03f4fa076d2981b45",
+    "InstanceType": "t2.micro",
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "ec2secgrp06AACBBC",
+       "GroupId"
+      ]
+     }
+    ],
+    "SubnetId": "p-12345",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "unbiased_coder_instance"
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": "#!/bin/bash"
+    }
+   },
+   "DependsOn": [
+    "ec2instInstanceRole6A537961"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "Ec2DeployStack/ec2_inst/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1XNTQrCMBAF4LN0n4y1FS/gQtyVeACJcYpj06TkBykhdzdUs3D1hvfxmA4OPbSNfHuuHhPXdId0DVJNTKC30SlkxW4JVVcAVXQU1rOzcWGn0fwXF+ODNGVRpN6ZkZwhCau3umblwdmRNOa84e9jZsMantbseti3cGxenoi7aALNCOKbH1b5PgK4AAAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "Ec2DeployStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,14 @@
+#! ./.venv/bin/python
+
+import os
+import boto3
+
+os.environ["AWS_PROFILE"] = "voccer"
+client = boto3.client("ec2")
+
+image_id = "ami-03f4fa076d2981b45"
+instance_type = "t2.micro"
+
+response = client.run_instances(
+    ImageId=image_id, InstanceType=instance_type, MaxCount=1, MinCount=1
+)
