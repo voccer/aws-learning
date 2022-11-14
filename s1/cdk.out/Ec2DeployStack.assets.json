@@ -1,0 +1,20 @@
+{
+  "version": "21.0.0",
+  "files": {
+    "a97ab551784ed1736ab74032e943957094abaa95b287671ce2b134bb81b0a9b6": {
+      "source": {
+        "path": "Ec2DeployStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "214658890855-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-214658890855-ap-northeast-1",
+          "objectKey": "a97ab551784ed1736ab74032e943957094abaa95b287671ce2b134bb81b0a9b6.json",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::214658890855:role/cdk-hnb659fds-file-publishing-role-214658890855-ap-northeast-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

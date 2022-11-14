@@ -1,0 +1,5 @@
+#! /bin/bash
+export AWS_PROFILE=voccer
+aws ec2 describe-images --region ap-northeast-1 --filters "Name=root-device-type,Values=ebs" --output json >./ec2_images.json
+
+aws ec2 run-instances --image-id ami-03f4fa076d2981b45 --instance-type t2.micro
