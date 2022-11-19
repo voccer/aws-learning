@@ -3,12 +3,11 @@ import { LOCAL_STORAGE_KEY } from 'src/common/open-api'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { useLanguage } from 'src/common/hooks'
 
 type LanguageType = 'en' | 'jp'
 
-export const withAuth = (Component: ReactNode) => {
+export const withAuth = (Component: any) => {
   const WithAuthWrapper = (props: any) => {
     const router = useRouter()
 
@@ -30,5 +29,6 @@ export const withAuth = (Component: ReactNode) => {
 
     return Component({ ...props })
   }
+
   return WithAuthWrapper
 }

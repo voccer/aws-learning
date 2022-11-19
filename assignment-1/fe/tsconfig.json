@@ -15,12 +15,11 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types", "common-ui/types"]
+    "typeRoots": ["./node_modules/@types"]
   },
-  "exclude": ["node_modules", ".next", "out", "common-ui/types"],
+  "exclude": ["node_modules", ".next", "out"],
   "include": [
     "next-env.d.ts",
-    "common-ui/types/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "src/pages/**/*.tsx",

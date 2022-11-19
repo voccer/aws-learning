@@ -3,9 +3,9 @@ import type { AppProps } from 'next/app'
 import Router from 'next/router'
 import NProgress from 'nprogress'
 import { ReactElement, ReactNode } from 'react'
-import { withRedux, withAuth } from 'src/common/hocs'
+import { withAuth, withRedux } from 'src/common/hocs'
 
-type NextPageWithLayout = NextPage & {
+export type NextPageWithLayout<P = any> = NextPage<P> & {
   getLayout?: (page: ReactElement) => ReactNode
 }
 
@@ -25,4 +25,4 @@ Router.events.on('routeChangeComplete', () => {
 })
 Router.events.on('routeChangeError', () => NProgress.done())
 
-export default withRedux(withAuth(MyApp))
+// export default withRedux(withAuth(MyApp))

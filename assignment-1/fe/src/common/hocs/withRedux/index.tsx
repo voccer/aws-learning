@@ -47,5 +47,6 @@ export const initStore = (preloadedState: any = {}) => {
 
 export const withRedux = (component: React.ReactNode, store?: Store) => {
   const makeStore: MakeStore<Store> = store ? () => store : initStore
+  
   return createWrapper(makeStore).withRedux(component)
 }
