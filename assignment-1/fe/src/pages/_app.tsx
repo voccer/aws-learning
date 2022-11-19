@@ -1,12 +1,9 @@
-import 'styles/globals.css'
-import 'styles/index.scss'
-
 import { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import Router from 'next/router'
 import NProgress from 'nprogress'
 import { ReactElement, ReactNode } from 'react'
-import { withAuth, withRedux } from 'src/common/hocs'
+import { withRedux, withAuth } from 'src/common/hocs'
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
