@@ -11,7 +11,7 @@ import {
 import * as bcrypt from 'bcrypt'
 import { appConfig } from 'config'
 
-@Entity('m_users')
+@Entity('users')
 export default class UserEntity {
   @PrimaryGeneratedColumn()
   id: number

@@ -5,10 +5,6 @@ import { guardConfig } from 'config'
 @Injectable()
 export class AuthenticationGuard extends AuthGuard(guardConfig.JWT) implements CanActivate {
   handleRequest(err: any, user: any, info: Error, context: ExecutionContext) {
-    // console.log('err: ', err)
-    // console.log('user: ', user)
-    // console.log('info: ', info)
-    // console.log('req::', req.)
     if (info) {
       const req = context.switchToHttp().getRequest()
 
@@ -16,6 +12,7 @@ export class AuthenticationGuard extends AuthGuard(guardConfig.JWT) implements C
 
       throw new UnauthorizedException(info.message)
     }
+
     return user
   }
 }

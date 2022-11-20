@@ -2,14 +2,12 @@ import { Body, Controller, Post, UseGuards, Res, Get, Req, HttpStatus, Unauthori
 import { JwtService } from '@nestjs/jwt'
 import { Response, Request } from 'express'
 import { authConfig } from 'config'
-import { SharedService } from './shared.service'
-import { AuthenticationGuard } from 'shared/auth'
+import { AuthService } from './auth.service'
+import { AuthenticationGuard } from './guards'
 
-const root = 'shared'
-
-@Controller(root)
-export class SharedController {
-  constructor(private readonly jwtService: JwtService, private readonly sharedService: SharedService) {}
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly jwtService: JwtService, private readonly authService: AuthService) {}
 
   @Get('/login')
   async getLogin(@Res() res: Response, @Req() req: Request) {
@@ -37,10 +35,9 @@ export class SharedController {
   }
 
   @Post('/login')
-  async loginAndSetSess(@Body() data: any, @Res() res: Response): Promise<any> {
+  async login(@Body() data: any, @Res() res: Response): Promise<any> {
     const { email, password } = data
-    const workspaceId = +data.workspaceId
-    const resp = await this.sharedService.login(workspaceId, email, password)
+    const resp = await this.authService.login(email, password)
 
     if (resp['error']) {
       console.log('login error::', resp.error)
@@ -49,8 +46,6 @@ export class SharedController {
 
     const token = this.jwtService.sign({
       id: resp.id,
-      role: resp.role,
-      workspaceId: +workspaceId,
       email: resp.email,
     })
 

@@ -21,7 +21,7 @@ export class UsersService {
       return { error: error }
     }
 
-    return { id: entity.id, email: entity.email, role: entity.role }
+    return { id: entity.id, email: entity.email }
   }
 
   async validateUser(email: string, password: string): Promise<any> {

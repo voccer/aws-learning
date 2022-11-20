@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:latest
 
 RUN apt-get update -yq \
   && apt-get upgrade -yq \
