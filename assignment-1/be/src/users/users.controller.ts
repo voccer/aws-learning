@@ -12,9 +12,15 @@ export class UsersController {
   @UseGuards(DetectRoleGuard)
   @UseGuards(AuthenticationGuard)
   @Get('/me')
-  async getHome(@Request() req: any, @Res() res: Response) {
-    // console.log('getHome::', req.user)
+  async me(@Request() req: any, @Res() res: Response) {
     const user = req.user
-    return res.redirect('profile/' + user.id)
+    return res.status(200).render('users/me', { user })
+  }
+
+  @UseGuards(DetectRoleGuard)
+  @UseGuards(AuthenticationGuard)
+  @Get('/home')
+  async getHome(@Request() req: any, @Res() res: Response) {
+    res.redirect('me')
   }
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+  </head>
+  <body>
+    <h1>Register</h1>
+    <form action="/register" method="POST">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" />
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" />
+      <label for="password-confirmation">Password Confirmation</label>
+      <input type="password" name="password-confirmation" id="password-confirmation" />
+      <button type="submit">Register</button>
+    </form>
+  </body>
+  <script>
+    const form = document.querySelector('form')
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const email = document.querySelector('#email').value
+      const password = document.querySelector('#password').value
+      const passwordConfirmation = document.querySelector('#password-confirmation').value
+
+      async function register() {
+        const res = await fetch('/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            passwordConfirmation,
+          }),
+        })
+        const data = await res.json()
+        console.log(data)
+        console.log(data.id)
+        console.log(typeof data)
+
+        if (data && data['id']) {
+          console.log('User created')
+          window.location.href = '/auth/login'
+        }
+      }
+
+      register()
+    })
+  </script>
+</html>

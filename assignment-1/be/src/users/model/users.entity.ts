@@ -12,7 +12,7 @@ import * as bcrypt from 'bcrypt'
 import { appConfig } from 'config'
 
 @Entity('users')
-export default class UserEntity {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -21,12 +21,6 @@ export default class UserEntity {
 
   @Column({ name: 'password', type: 'varchar', length: 100, nullable: false })
   password: string
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, appConfig.HASH_SALT_ROUNDS)
-  }
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp', nullable: false })
   createdAt: Date
@@ -37,4 +31,25 @@ export default class UserEntity {
     nullable: true,
   })
   updatedAt: Date
+
+  @BeforeInsert()
+  ahihi() {
+    console.log('ahihi')
+  }
+
+  @BeforeInsert()
+  async beforeInsertCallBack() {
+    console.log('beforeInsertCallBack')
+    await this.hashPassword()
+  }
+
+  @BeforeUpdate()
+  async beforeUpdateCallBack() {
+    await this.hashPassword()
+  }
+
+  async hashPassword() {
+    console.log('hashPassword')
+    this.password = await bcrypt.hash(this.password, appConfig.HASH_SALT_ROUNDS)
+  }
 }

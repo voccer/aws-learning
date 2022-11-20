@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { UsersService } from './users.service'
 import { UsersController } from './users.controller'
 import { JsonWebTokenStrategy } from 'auth/strategies'
-import UserEntity from './model/users.entity'
+import { UserEntity } from './model/users.entity'
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],

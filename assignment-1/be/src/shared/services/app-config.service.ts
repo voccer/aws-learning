@@ -66,17 +66,14 @@ export class AppConfigService {
   }
 
   get postgresConfig(): TypeOrmModuleOptions {
-    const entities = [
-      __dirname + '/../../modules/**/*.entity{.ts,.js}',
-      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
-    ]
+    const entities = [__dirname + '/../../**/*.entity{.ts,.js}']
     const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}']
 
     return {
       entities,
       migrations,
       keepConnectionAlive: true,
-      dropSchema: true,
+      dropSchema: false,
       type: 'postgres',
       name: 'default',
       host: this.getString('DB_HOST'),

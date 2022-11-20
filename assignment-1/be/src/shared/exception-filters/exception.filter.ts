@@ -25,7 +25,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof NotFoundException) {
       console.log('not found exception')
-      return response.redirect('/404')
     }
   }
 }

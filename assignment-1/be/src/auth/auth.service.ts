@@ -11,14 +11,14 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<any> {
-    const entity = await this.usersService.findByEmailAndPassword(email, password)
+    const user = await this.usersService.findByEmailAndPassword(email, password)
 
     const error = 'information login is incorrect'
-    if (!entity) {
+    if (!user) {
       console.log('can not find user')
       return { error: error }
     }
 
-    return { id: entity.id, email: entity.email }
+    return { id: user.id, email: user.email }
   }
 }

@@ -4,8 +4,8 @@ import * as bcrypt from 'bcrypt'
 import { authConfig } from 'config'
 import { between } from 'shared/utils/random'
 import { Repository } from 'typeorm'
-import { createUserDto } from 'users/model/dtos'
-import UserEntity from 'users/model/users.entity'
+import { UserEntity } from 'users/model/users.entity'
+import { UserRegisterDto } from 'auth/model/dtos'
 
 @Injectable()
 export class UsersService {
@@ -60,10 +60,10 @@ export class UsersService {
     return await bcrypt.compare(password, storedPasswordHash)
   }
 
-  async createUser(createUserDto: createUserDto): Promise<any> {
-    const existUser = await this.findByEmail(createUserDto.email)
+  async createUser(userRegisterDto: UserRegisterDto): Promise<any> {
+    const existUser = await this.findByEmail(userRegisterDto.email)
     if (existUser) {
-      throw new Error('Email is existed')
+      throw new Error('email is existed')
     }
 
     const newPassword = between(100000, 999999).toString()
@@ -71,8 +71,9 @@ export class UsersService {
     const newUser = {
       password: newPassword,
       createdAt: new Date(),
-      ...createUserDto,
+      ...userRegisterDto,
     }
-    await this.usersRepository.save(newUser)
+
+    return await this.usersRepository.save(newUser)
   }
 }

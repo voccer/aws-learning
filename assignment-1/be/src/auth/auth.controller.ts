@@ -4,10 +4,17 @@ import { Response, Request } from 'express'
 import { authConfig } from 'config'
 import { AuthService } from './auth.service'
 import { AuthenticationGuard } from './guards'
+import { UserRegisterDto } from './model/dtos/user-register.dto'
+import { UserDto } from 'users/model/dtos'
+import { UsersService } from 'users/users.service'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly jwtService: JwtService, private readonly authService: AuthService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly authService: AuthService,
+    private userService: UsersService
+  ) {}
 
   @Get('/login')
   async getLogin(@Res() res: Response, @Req() req: Request) {
@@ -31,7 +38,7 @@ export class AuthController {
       return res.status(HttpStatus.OK).redirect(`/users/home`)
     }
 
-    return res.status(HttpStatus.OK).render('shared/login')
+    return res.status(HttpStatus.OK).render('auth/login')
   }
 
   @Post('/login')
@@ -58,7 +65,7 @@ export class AuthController {
 
   @UseGuards(AuthenticationGuard)
   @Get('/logout')
-  async logout(@Req() req: any, @Res() res: Response) {
+  async logout(@Res() res: Response) {
     // remove cookie
     return res.status(HttpStatus.OK).clearCookie(authConfig.COOKIE_NAME).redirect('login')
   }
@@ -67,5 +74,22 @@ export class AuthController {
   @Get('/not_found')
   async getNotFound(@Res() res: Response) {
     return res.status(HttpStatus.NOT_FOUND).render('shared/not-found')
+  }
+
+  @Get('/register')
+  async getRegister(@Res() res: Response) {
+    return res.status(HttpStatus.OK).render('auth/register')
+  }
+
+  @Post('register')
+  async userRegister(@Body() userRegisterDto: UserRegisterDto): Promise<any> {
+    const user = await this.userService.createUser(userRegisterDto)
+
+    if (user) {
+      return {
+        id: user.id,
+        email: user.email,
+      }
+    }
   }
 }

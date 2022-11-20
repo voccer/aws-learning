@@ -1,15 +1,13 @@
-import dotenv from 'dotenv'
 import { DataSource } from 'typeorm'
-
-dotenv.config()
+import { dbConfig } from 'config'
 
 export const dataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  port: Number(process.env.DB_PORT || 5432),
-  username: process.env.DB_USERNAME || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
-  database: process.env.DB_DATABASE || 'video-store',
-  entities: ['src/**/model/*.entity{.ts,.js}'],
+  host: dbConfig.DB_HOST,
+  port: dbConfig.DB_PORT,
+  username: dbConfig.DB_USERNAME,
+  password: dbConfig.DB_PASSWORD,
+  database: dbConfig.DB_DATABASE,
+  entities: [__dirname + '/../**/*.entity.js'],
   migrations: ['src/database/migrations/*{.ts,.js}'],
 })
