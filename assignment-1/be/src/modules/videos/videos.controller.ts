@@ -1,29 +1,54 @@
-import { Controller, Get, Post, Body, Param, Delete, Res } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  Res,
+  UploadedFiles,
+  UseInterceptors,
+  UseGuards,
+  Req,
+} from '@nestjs/common'
 import { VideosService } from './videos.service'
-import { CreateVideoDto } from './dto'
-import { Response } from 'express'
+import { Response, Request } from 'express'
+import { AnyFilesInterceptor } from '@nestjs/platform-express'
+import { AuthenticationGuard } from 'modules/auth/guards'
+import { UserEntity } from 'modules/users/entities'
 
 @Controller('videos')
 export class VideosController {
   constructor(private readonly videosService: VideosService) {}
 
-  @Post()
-  async create(@Body() createVideoDto: CreateVideoDto) {
-    return this.videosService.create(createVideoDto)
+  @Post('/')
+  @UseInterceptors(AnyFilesInterceptor())
+  @UseGuards(AuthenticationGuard)
+  async create(@Req() req: Request, @UploadedFiles() file: Express.Multer.File) {
+    const user = <UserEntity>req.user
+    const resp = await this.videosService.create(file[0], user)
+    return resp
   }
 
   @Get('/')
+  @UseGuards(AuthenticationGuard)
   async index(@Res() res: Response) {
     const videos = await this.videosService.findAll()
     return res.status(200).render('videos/index', { videos })
   }
 
   @Get(':id')
-  async show(@Param('id') id: string) {
-    return this.videosService.findOne(+id)
+  @UseGuards(AuthenticationGuard)
+  async show(@Req() req: Request, @Param('id') id: string, @Res() res: Response) {
+    const user = <UserEntity>req.user
+    const video = await this.videosService.findOneById(+id)
+    const comment = await this.videosService.getComments(video)
+    const view = video.views
+
+    return res.status(200).render('videos/id', { video, user, comment, view })
   }
 
   @Delete(':id')
+  @UseGuards(AuthenticationGuard)
   async remove(@Param('id') id: string) {
     return this.videosService.remove(+id)
   }

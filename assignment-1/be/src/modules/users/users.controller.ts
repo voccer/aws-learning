@@ -16,8 +16,8 @@ export class UsersController {
     return res.status(200).render('users/me', { user })
   }
 
-  @UseGuards(AuthenticationGuard)
   @Get('/home')
+  @UseGuards(AuthenticationGuard)
   async home(@Request() req: any, @Res() res: Response) {
     const user = req.user
     return res.status(200).render('users/me', { user })

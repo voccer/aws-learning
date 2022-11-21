@@ -17,7 +17,7 @@ export class users20221120123123 implements MigrationInterface {
             name: 'email',
             type: 'varchar(100)',
             isNullable: false,
-            isUnique: true,
+            isUnique: false,
           },
           {
             name: 'password',
@@ -33,7 +33,8 @@ export class users20221120123123 implements MigrationInterface {
           {
             name: 'updated_at',
             type: 'timestamp',
-            isNullable: true,
+            isNullable: false,
+            default: 'now()',
           },
         ],
       })

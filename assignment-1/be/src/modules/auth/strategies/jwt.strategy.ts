@@ -19,8 +19,8 @@ export class JWTStrategy extends PassportStrategy(Strategy, guardConfig.JWT) {
     })
   }
 
-  async validate(email: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(email, password)
+  async validate({ email }): Promise<any> {
+    const user = await this.authService.validateUser(email)
     if (!user) {
       throw new UnauthorizedException()
     }

@@ -1,5 +1,6 @@
+import { ViewEntity } from 'modules/views/entities/view.entity'
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
-import { VideoEntity } from '../../videos/entities/video.entity'
+import { VideoEntity } from 'modules/videos/entities/video.entity'
 
 @Entity('users')
 export class UserEntity {
@@ -24,4 +25,7 @@ export class UserEntity {
 
   @OneToMany(() => VideoEntity, (video: VideoEntity) => video.user)
   videos: VideoEntity[]
+
+  @OneToMany(() => ViewEntity, (view: ViewEntity) => view.user)
+  views: ViewEntity[]
 }

@@ -9,13 +9,12 @@ export class AuthenticationGuard extends AuthGuard(guardConfig.JWT) {
   }
 
   handleRequest(err: any, user: any, info: Error, context: ExecutionContext) {
-    console.log('info', info)
-    if (info) {
+    if (info || err) {
       const req = context.switchToHttp().getRequest()
 
-      console.log(`can not authenticate with request::${req.path}, redirect to login with message::${info.message}`)
+      console.log(`can not authenticate with request::${req.path}, redirect to login page`)
 
-      throw new UnauthorizedException(info.message)
+      throw new UnauthorizedException(info?.message || err?.message)
     }
 
     return user

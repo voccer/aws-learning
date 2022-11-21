@@ -33,11 +33,13 @@ export class views20221121123124 implements MigrationInterface {
             name: 'created_at',
             type: 'timestamp',
             isNullable: false,
+            default: 'now()',
           },
           {
             name: 'updated_at',
             type: 'timestamp',
             isNullable: false,
+            default: 'now()',
           },
         ],
       })

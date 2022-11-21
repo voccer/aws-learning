@@ -15,7 +15,7 @@ export class videos20221121123123 implements MigrationInterface {
           },
           {
             name: 'url',
-            type: 'varchar(100)',
+            type: 'varchar(1024)',
             isNullable: false,
           },
           {
@@ -27,11 +27,13 @@ export class videos20221121123123 implements MigrationInterface {
             name: 'created_at',
             type: 'timestamp',
             isNullable: false,
+            default: 'now()',
           },
           {
             name: 'updated_at',
             type: 'timestamp',
             isNullable: false,
+            default: 'now()',
           },
         ],
       })

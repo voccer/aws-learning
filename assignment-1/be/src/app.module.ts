@@ -8,6 +8,7 @@ import { AppConfigService } from 'shared/services/app-config.service'
 import { SharedModule } from 'shared/shared.module'
 import { VideosModule } from 'modules/videos/videos.module'
 import { ViewsModule } from 'modules/views/views.module'
+import { CommentsModule } from 'modules/comments/comments.module'
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ViewsModule } from 'modules/views/views.module'
     }),
     VideosModule,
     ViewsModule,
+    CommentsModule,
   ],
   providers: [],
 })

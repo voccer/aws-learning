@@ -9,8 +9,11 @@
   <body>
     <div id="container">
       <div id="header">
+        <div id="current-name">
+          <h1>Hi, <%= user.email %></h1>
+        </div>
         <div id="logout">
-          <a href="/auth/logout">Logout</a>
+          <a href="#">Logout</a>
         </div>
       </div>
       <div id="content">
@@ -31,14 +34,13 @@
     const logout = document.getElementById('logout')
     logout.addEventListener('click', () => {
       async function logout() {
+        localStorage.removeItem('token')
         const res = await fetch('/auth/logout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
         })
-        const data = await res.json()
-        localStorage.removeItem('token')
       }
       logout()
     })

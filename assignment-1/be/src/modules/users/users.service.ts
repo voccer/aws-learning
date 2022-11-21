@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
 import { authConfig } from 'config'
-import { between } from 'shared/utils/random'
 import { Repository } from 'typeorm'
 import { UserEntity } from 'modules/users/entities'
 import { UserRegisterDto } from 'modules/auth/dto'
@@ -24,7 +23,7 @@ export class UsersService {
     return { id: entity.id, email: entity.email }
   }
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<UserEntity> | null {
     const user = await this.findByEmail(email)
 
     const isPassword = await this.comparePassword(password, user.password)
@@ -34,7 +33,7 @@ export class UsersService {
     }
   }
 
-  async findByEmail(email: string): Promise<any> {
+  async findByEmail(email: string): Promise<UserEntity> | null {
     const user = await this.usersRepository.findOne({
       where: { email: email },
     })
@@ -42,7 +41,7 @@ export class UsersService {
     return user ? user : null
   }
 
-  async findByEmailAndPassword(email: string, password: string): Promise<any> {
+  async findByEmailAndPassword(email: string, password: string): Promise<UserEntity> | null {
     const user = await this.findByEmail(email)
     if (user) {
       const isPassword = await this.comparePassword(password, user.password)
@@ -56,11 +55,11 @@ export class UsersService {
     return await bcrypt.hash(password, authConfig['HASH_SALT_ROUNDS'])
   }
 
-  async comparePassword(password: string, storedPasswordHash: string): Promise<any> {
+  async comparePassword(password: string, storedPasswordHash: string): Promise<boolean> {
     return await bcrypt.compare(password, storedPasswordHash)
   }
 
-  async createUser(userRegisterDto: UserRegisterDto): Promise<any> {
+  async createUser(userRegisterDto: UserRegisterDto): Promise<UserEntity> | null {
     const existUser = await this.findByEmail(userRegisterDto.email)
     if (existUser) {
       throw new Error('email is existed')

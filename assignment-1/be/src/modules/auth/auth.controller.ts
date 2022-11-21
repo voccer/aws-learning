@@ -44,12 +44,12 @@ export class AuthController {
   }
 
   // @UseGuards(AuthenticationGuard)
-  @Get('/not_found')
+  @Get('not_found')
   async getNotFound(@Res() res: Response) {
-    return res.status(HttpStatus.NOT_FOUND).render('shared/not-found')
+    return res.status(HttpStatus.NOT_FOUND).render('auth/not_found')
   }
 
-  @Get('/register')
+  @Get('register')
   async getRegister(@Res() res: Response) {
     return res.status(HttpStatus.OK).render('auth/register')
   }
