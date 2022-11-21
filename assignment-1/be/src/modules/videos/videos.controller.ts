@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Delete, Res } from '@nestjs/common'
 import { VideosService } from './videos.service'
-import { CreateVideoDto, UpdateVideoDto } from './dto'
+import { CreateVideoDto } from './dto'
+import { Response } from 'express'
 
 @Controller('videos')
 export class VideosController {
@@ -12,18 +13,14 @@ export class VideosController {
   }
 
   @Get('/')
-  async index() {
-    return this.videosService.findAll()
+  async index(@Res() res: Response) {
+    const videos = await this.videosService.findAll()
+    return res.status(200).render('videos/index', { videos })
   }
 
   @Get(':id')
   async show(@Param('id') id: string) {
     return this.videosService.findOne(+id)
-  }
-
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateVideoDto: UpdateVideoDto) {
-    return this.videosService.update(+id, updateVideoDto)
   }
 
   @Delete(':id')

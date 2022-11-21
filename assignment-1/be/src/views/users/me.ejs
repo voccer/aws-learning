@@ -10,11 +10,13 @@
     <div id="container">
       <div id="header">
         <div id="logout">
-          <a href="/logout">Logout</a>
+          <a href="/auth/logout">Logout</a>
         </div>
       </div>
       <div id="content">
-        <div id="video">click here to show videos</div>
+        <div id="video">
+          <a href="#">click here to show videos</a>
+        </div>
       </div>
       <div id="footer"></div>
     </div>
@@ -23,7 +25,22 @@
   <script>
     const video = document.getElementById('video')
     video.addEventListener('click', () => {
-      window.location.href = '/videos'
+      window.location.href = '/videos?token=' + localStorage.getItem('token')
+    })
+
+    const logout = document.getElementById('logout')
+    logout.addEventListener('click', () => {
+      async function logout() {
+        const res = await fetch('/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        const data = await res.json()
+        localStorage.removeItem('token')
+      }
+      logout()
     })
   </script>
 </html>

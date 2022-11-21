@@ -1,1 +1,3 @@
-export class CreateVideoDto {}
+export class CreateVideoDto {
+  
+}

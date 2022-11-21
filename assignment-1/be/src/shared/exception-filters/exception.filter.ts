@@ -15,6 +15,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
+    const request = ctx.getRequest()
 
     // console.log(exception)
     // console.log(status)
@@ -24,7 +25,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     if (exception instanceof NotFoundException) {
-      console.log('not found exception')
+      console.log('not found exception::', request.url)
     }
   }
 }

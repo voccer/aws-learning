@@ -29,20 +29,25 @@
       e.preventDefault()
       const email = document.querySelector('#email').value
       const password = document.querySelector('#password').value
-      fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data)
+      async function login() {
+        const resp = await fetch('/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
         })
+
+        const data = await resp.json()
+        if (data && data['access_token']) {
+          localStorage.setItem('access_token', data['access_token'])
+          window.location.href = '/users/home?token=' + data['access_token']
+        }
+      }
+      login()
     })
   </script>
 </html>

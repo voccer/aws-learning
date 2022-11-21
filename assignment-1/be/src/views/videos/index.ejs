@@ -14,8 +14,9 @@
         </div>
       </div>
       <div id="content">
-        <% videos.forEach(function(video)){%>
+        <% for(const video of videos){ %>
         <div id="video">
+          ID: <%= video.id %>
           <video src="<%=video.url%>" controls></video>
         </div>
         <% } %>

@@ -16,27 +16,7 @@ export class AuthController {
   ) {}
 
   @Get('/login')
-  async getLogin(@Res() res: Response, @Req() req: Request) {
-    // check cookie exist
-    const cookie = req.cookies[authConfig.COOKIE_NAME]
-    // get user from cookie
-    const decodeCookie = this.jwtService.decode(cookie) || {}
-
-    console.log('decodeCookie::', decodeCookie)
-
-    if (decodeCookie['id']) {
-      try {
-        this.jwtService.verify(cookie)
-      } catch (err) {
-        console.log('verify cookie error::', err.message)
-
-        throw new UnauthorizedException('verify cookie error')
-      }
-
-      // user is logged in
-      return res.status(HttpStatus.OK).redirect(`/users/home`)
-    }
-
+  async getLogin(@Res() res: Response) {
     return res.status(HttpStatus.OK).render('auth/login')
   }
 
