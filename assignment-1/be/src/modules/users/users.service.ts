@@ -66,12 +66,12 @@ export class UsersService {
       throw new Error('email is existed')
     }
 
-    const newPassword = between(100000, 999999).toString()
+    const password = await this.hashPassword(userRegisterDto.password)
 
     const newUser = {
-      password: newPassword,
-      createdAt: new Date(),
       ...userRegisterDto,
+      createdAt: new Date(),
+      password: password,
     }
 
     return await this.usersRepository.save(newUser)

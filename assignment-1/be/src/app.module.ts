@@ -22,8 +22,8 @@ import { ViewsModule } from 'modules/views/views.module'
       useFactory: (appConfigService: AppConfigService) => appConfigService.postgresConfig,
       inject: [AppConfigService],
     }),
-    // VideosModule,
-    // ViewsModule,
+    VideosModule,
+    ViewsModule,
   ],
   providers: [],
 })

@@ -1,7 +1,7 @@
 import { Controller, UseGuards, Request, Res, Get } from '@nestjs/common'
 import { Response } from 'express'
 
-import { AuthenticationGuard, DetectRoleGuard } from 'modules/auth/guards'
+import { AuthenticationGuard } from 'modules/auth/guards'
 
 import { UsersService } from './users.service'
 
@@ -9,7 +9,6 @@ import { UsersService } from './users.service'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(DetectRoleGuard)
   @UseGuards(AuthenticationGuard)
   @Get('/me')
   async me(@Request() req: any, @Res() res: Response) {
@@ -17,7 +16,6 @@ export class UsersController {
     return res.status(200).render('users/me', { user })
   }
 
-  @UseGuards(DetectRoleGuard)
   @UseGuards(AuthenticationGuard)
   @Get('/home')
   async getHome(@Request() req: any, @Res() res: Response) {

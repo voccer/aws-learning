@@ -50,16 +50,10 @@ export class AuthController {
       return res.status(HttpStatus.NOT_FOUND).json(resp).end()
     }
 
-    const token = this.jwtService.sign({
-      id: resp.id,
-      email: resp.email,
-    })
+    const payload = { email: resp.email, sub: resp.id }
+    const accessToken = this.jwtService.sign(payload)
 
-    res.cookie(authConfig.COOKIE_NAME, token, {
-      expires: new Date(Date.now() + authConfig.COOKIE_EXPIRES_TIME),
-    })
-
-    return res.status(HttpStatus.OK).json({ status: 'ok' }).end()
+    return res.status(HttpStatus.OK).json({ access_token: accessToken }).end()
   }
 
   @UseGuards(AuthenticationGuard)

@@ -31,25 +31,4 @@ export class UserEntity {
     nullable: true,
   })
   updatedAt: Date
-
-  @BeforeInsert()
-  ahihi() {
-    console.log('ahihi')
-  }
-
-  @BeforeInsert()
-  async beforeInsertCallBack() {
-    console.log('beforeInsertCallBack')
-    await this.hashPassword()
-  }
-
-  @BeforeUpdate()
-  async beforeUpdateCallBack() {
-    await this.hashPassword()
-  }
-
-  async hashPassword() {
-    console.log('hashPassword')
-    this.password = await bcrypt.hash(this.password, appConfig.HASH_SALT_ROUNDS)
-  }
 }
