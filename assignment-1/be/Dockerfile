@@ -18,7 +18,6 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm i
 
-
 EXPOSE 5000
 
 CMD ["bash"]

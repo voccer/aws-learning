@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { authConfig } from 'config'
 import { PassportModule } from '@nestjs/passport'
 import { JsonWebTokenStrategy } from './strategies'
-import { UsersModule } from 'users/users.module'
+import { UsersModule } from 'modules/users/users.module'
 
 @Module({
   imports: [

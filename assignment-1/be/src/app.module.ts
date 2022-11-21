@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { AuthModule } from 'auth/auth.module'
-import { UsersModule } from 'users/users.module'
+import { AuthModule } from 'modules/auth/auth.module'
+import { UsersModule } from 'modules/users/users.module'
 import { AppConfigService } from 'shared/services/app-config.service'
-import { SharedModule } from './shared/shared.module'
+import { SharedModule } from 'shared/shared.module'
+import { VideosModule } from 'modules/videos/videos.module'
+import { ViewsModule } from 'modules/views/views.module'
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { SharedModule } from './shared/shared.module'
       useFactory: (appConfigService: AppConfigService) => appConfigService.postgresConfig,
       inject: [AppConfigService],
     }),
+    // VideosModule,
+    // ViewsModule,
   ],
   providers: [],
 })

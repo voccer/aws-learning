@@ -4,8 +4,8 @@ import * as bcrypt from 'bcrypt'
 import { authConfig } from 'config'
 import { between } from 'shared/utils/random'
 import { Repository } from 'typeorm'
-import { UserEntity } from 'users/model/users.entity'
-import { UserRegisterDto } from 'auth/model/dtos'
+import { UserEntity } from 'modules/users/entities'
+import { UserRegisterDto } from 'modules/auth/dto'
 
 @Injectable()
 export class UsersService {

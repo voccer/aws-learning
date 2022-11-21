@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Bcrypt } from 'shared/external'
-import { UsersService } from 'users/users.service'
+import { UsersService } from 'modules/users/users.service'
 
 @Injectable()
 export class AuthService {

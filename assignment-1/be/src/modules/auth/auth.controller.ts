@@ -4,8 +4,8 @@ import { Response, Request } from 'express'
 import { authConfig } from 'config'
 import { AuthService } from './auth.service'
 import { AuthenticationGuard } from './guards'
-import { UserRegisterDto } from './model/dtos/user-register.dto'
-import { UsersService } from 'users/users.service'
+import { UserRegisterDto } from './dto'
+import { UsersService } from 'modules/users/users.service'
 
 @Controller('auth')
 export class AuthController {

@@ -1,7 +1,7 @@
 import { Controller, UseGuards, Request, Res, Get } from '@nestjs/common'
 import { Response } from 'express'
 
-import { AuthenticationGuard, DetectRoleGuard } from 'auth/guards'
+import { AuthenticationGuard, DetectRoleGuard } from 'modules/auth/guards'
 
 import { UsersService } from './users.service'
 
