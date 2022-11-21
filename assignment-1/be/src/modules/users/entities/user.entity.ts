@@ -1,15 +1,5 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  BeforeInsert,
-  BeforeUpdate,
-} from 'typeorm'
-
-import * as bcrypt from 'bcrypt'
-import { appConfig } from 'config'
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
+import { VideoEntity } from '../../videos/entities/video.entity'
 
 @Entity('users')
 export class UserEntity {
@@ -31,4 +21,7 @@ export class UserEntity {
     nullable: true,
   })
   updatedAt: Date
+
+  @OneToMany(() => VideoEntity, (video: VideoEntity) => video.user)
+  videos: VideoEntity[]
 }

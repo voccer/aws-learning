@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { UsersService } from './users.service'
 import { UsersController } from './users.controller'
 import { JsonWebTokenStrategy } from 'modules/auth/strategies'
-import { UserEntity } from './entities/users.entity'
+import { UserEntity } from './entities/user.entity'
 import { AuthService } from 'modules/auth/auth.service'
 
 @Module({
