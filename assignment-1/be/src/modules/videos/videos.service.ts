@@ -7,6 +7,8 @@ import { ValidatorService } from 'shared/services/validator.service'
 import { AwsS3Service } from 'shared/services/aws-s3.service'
 import { UserEntity } from 'modules/users/entities'
 import { ViewEntity } from 'modules/views/entities/view.entity'
+import { LikeEntity } from 'modules/likes/entities'
+import { LikesService } from 'modules/likes/likes.service'
 
 @Injectable()
 export class VideosService {
@@ -15,8 +17,11 @@ export class VideosService {
     private videosRepository: Repository<VideoEntity>,
     @InjectRepository(ViewEntity)
     private viewsRepository: Repository<ViewEntity>,
+    @InjectRepository(LikeEntity)
+    private likesRepository: Repository<LikeEntity>,
     private validatorService: ValidatorService,
-    private awsS3Service: AwsS3Service
+    private awsS3Service: AwsS3Service,
+    private likesService: LikesService
   ) {}
 
   async create(file: Express.Multer.File, user: UserEntity): Promise<VideoEntity> {
@@ -42,32 +47,52 @@ export class VideosService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getComments(_video: VideoEntity): Promise<any> {
+  async getComments(_video: VideoEntity, user: UserEntity): Promise<any> {
+    const userId = user.id
+
     return [
       {
         id: 1,
         content: "I'm a comment",
         likedCount: 1,
+        isLiked: await this.likesService.checkIsLiked(1, userId),
         children: [],
       },
       {
         id: 2,
         content: "I'm a comment 2",
         likedCount: 2,
+        isLiked: await this.likesService.checkIsLiked(2, userId),
         children: [
           {
             id: 4,
             content: "I'm a reply comment",
             likedCount: 4,
-            children: [{ id: 6, content: "I'm a reply of reply comment", likedCount: 1, children: [] }],
+            isLiked: await this.likesService.checkIsLiked(4, userId),
+            children: [
+              {
+                id: 6,
+                content: "I'm a reply of reply comment",
+                likedCount: 1,
+                children: [],
+                isLiked: await this.likesService.checkIsLiked(6, userId),
+              },
+            ],
           },
-          { id: 5, content: "I'm a reply comment2", likedCount: 1, children: [] },
+          {
+            id: 5,
+            content: "I'm a reply comment2",
+            likedCount: 1,
+            children: [],
+            isLiked: await this.likesService.checkIsLiked(5, userId),
+          },
         ],
       },
       {
         id: 3,
         content: "I'm a comment 3",
         likedCount: 3,
+        isLiked: await this.likesService.checkIsLiked(3, userId),
         children: [],
       },
     ]

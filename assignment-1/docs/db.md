@@ -9,6 +9,10 @@
 | `username`   | String   | username      |         |
 | `password`   | String   | hash password |         |
 | `created_at` | Datetime | created at    |         |
+| `updated_at` | Datetime | updated at    |         |
+
+- indexes:
+  - `id`: unique
 
 # Views
 
@@ -22,6 +26,11 @@
 | `viewer_id`  | BigInt   | viewer's id  |         |
 | `count`      | BigInt   | view's count | 0       |
 | `created_at` | Datetime | created at   |         |
+| `updated_at` | Datetime | updated at   |         |
+
+- indexes:
+  - `id`: unique
+  - `video_id`
 
 # Videos
 
@@ -34,6 +43,27 @@
 | `video_url`  | String   | video's url is saved in S3, cloudfront |         |
 | `author_id`  | BigInt   | author's id                            |         |
 | `created_at` | Datetime | created at                             |         |
+| `updated_at` | Datetime | updated at                             |         |
+
+- indexes:
+  - `id`: unique
+
+# Likes
+
+- name: `likes`
+- description: `likes` is a table that contains all the likes of the system. It is saved in the RDS database.
+
+| Name         | Type     | Content      | Default |
+| ------------ | -------- | ------------ | ------- |
+| `id`         | BigInt   | primary key  |         |
+| `comment_id` | BigInt   | comment's Id |         |
+| `user_id`    | BigInt   | user's id    |         |
+| `created_at` | Datetime | created at   |         |
+| `updated_at` | Datetime | updated at   |         |
+
+- indexes:
+  - `id`: unique
+  - `comment_id`, `user_id`: unique
 
 # Comments
 
@@ -51,6 +81,7 @@
 | `liked_cnt`  | BigInt   | liked count                                                      |         |
 | `id`         | BigInt   | unique id                                                        |         |
 | `created_at` | Datetime | created at                                                       |         |
+| `updated_at` | Datetime | updated at                                                       |         |
 
 ## GSI CreatedAt Table
 

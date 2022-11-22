@@ -12,18 +12,28 @@
         <h3>ID:<%= video.id %></h3>
         <h3>View Total:<%= viewTotal %></h3>
       </div>
-      <video src="<%=video.url%>" width="320" height="240" controls></video>
+      <div>
+        <video src="<%=video.url%>" width="320" height="240" controls></video>
+      </div>
+      <button id="sort-by-liked-count">sort by liked count</button>
+      <button id="sort-by-time">sort by time</button>
     </div>
     <% function showComment(comment){ %>
     <div style="margin-top: 20px; background-color: bisque">
       <% const id = comment.id; const likedCount = comment.likedCount; const content = comment.content %>
-      <div id="comment">
-        <div id="comment-content">
+      <div>
+        <button class="reply-sort-by-liked-count">reply sort by liked count</button>
+        <button class="reply-sort-by-time">reply sort by time</button>
+        <div>
           <p>content:<%= content %></p>
         </div>
-        <div id="comment-likes">
+        <div>
           <span>liked count: <%=likedCount %> </span>
-          <button id="like-button" onclick="">like</button>
+          <% if(comment.isLiked){ %>
+          <button class="dislike" id="dislike-<%=comment.id%>">dislike</button>
+          <% } else { %>
+          <button class="like" id="dislike-<%=comment.id%>">like</button>
+          <% } %>
         </div>
       </div>
       <div style="margin-top: 10px">
@@ -77,22 +87,24 @@
 
   <script>
     window.onload = async function () {
-      // send view
-      const videoId = document.querySelector('#video-title h3').innerText.split(':')[1].trim()
-      const resp = await fetch(`/views?token=${localStorage.getItem('token')}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify({
-          video_id: videoId,
-        }),
-      })
+      if (localStorage.getItem('send-viewable')) {
+        // send view
+        const videoId = document.querySelector('#video-title h3').innerText.split(':')[1].trim()
+        const resp = await fetch(`/views?token=${localStorage.getItem('token')}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify({
+            video_id: videoId,
+          }),
+        })
+      }
     }
 
+    // send comment
     const sendCommentSubmit = document.querySelector('#send-comment')
-
     sendCommentSubmit.addEventListener('click', async function () {
       const content = document.querySelector('#input-comment-content').value
       const videoId = document.querySelector('#video-title h3').innerText.split(':')[1].trim()
@@ -111,6 +123,52 @@
       if (data) {
         window.location.reload()
       }
+    })
+
+    // like comment
+    const likeButtons = document.querySelectorAll('.like')
+    likeButtons.forEach((likeButton) => {
+      likeButton.addEventListener('click', async function () {
+        const commentId = this.id.split('-')[1]
+        const resp = await fetch(`/likes?token=${localStorage.getItem('token')}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            comment_id: +commentId,
+          }),
+        })
+        const data = await resp.json()
+        if (data) {
+          localStorage.setItem('send_viewable', false)
+          window.location.reload()
+          localStorage.setItem('send_viewable', true)
+        }
+      })
+    })
+
+    // dislike comment
+    const dislikeButtons = document.querySelectorAll('.dislike')
+    dislikeButtons.forEach((dislikeButton) => {
+      dislikeButton.addEventListener('click', async function () {
+        const commentId = this.id.split('-')[1]
+        const resp = await fetch(`/likes?token=${localStorage.getItem('token')}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            comment_id: +commentId,
+          }),
+        })
+
+        if (resp.status === 204) {
+          localStorage.setItem('send_viewable', false)
+          window.location.reload()
+          localStorage.setItem('send_viewable', true)
+        }
+      })
     })
   </script>
 </html>

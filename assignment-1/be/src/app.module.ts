@@ -9,6 +9,7 @@ import { SharedModule } from 'shared/shared.module'
 import { VideosModule } from 'modules/videos/videos.module'
 import { ViewsModule } from 'modules/views/views.module'
 import { CommentsModule } from 'modules/comments/comments.module'
+import { LikesModule } from './modules/likes/likes.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CommentsModule } from 'modules/comments/comments.module'
     VideosModule,
     ViewsModule,
     CommentsModule,
+    LikesModule,
   ],
   providers: [],
 })

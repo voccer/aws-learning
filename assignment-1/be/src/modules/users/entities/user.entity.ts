@@ -1,6 +1,7 @@
 import { ViewEntity } from 'modules/views/entities/view.entity'
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
 import { VideoEntity } from 'modules/videos/entities/video.entity'
+import { LikeEntity } from '../../likes/entities/like.entity'
 
 @Entity('users')
 export class UserEntity {
@@ -28,4 +29,7 @@ export class UserEntity {
 
   @OneToMany(() => ViewEntity, (view: ViewEntity) => view.user)
   views: ViewEntity[]
+
+  @OneToMany(() => LikeEntity, (like: LikeEntity) => like.user)
+  likes: LikeEntity[]
 }

@@ -26,6 +26,7 @@ export class VideosController {
   async create(@Req() req: Request, @UploadedFiles() file: Express.Multer.File) {
     const user = <UserEntity>req.user
     const resp = await this.videosService.create(file[0], user)
+
     return resp
   }
 
@@ -41,7 +42,7 @@ export class VideosController {
   async show(@Req() req: Request, @Param('id') id: string, @Res() res: Response) {
     const user = <UserEntity>req.user
     const video = await this.videosService.findOneById(+id)
-    const comments = await this.videosService.getComments(video)
+    const comments = await this.videosService.getComments(video, user)
     const views = await this.videosService.getViews(video)
     let viewTotal = 0
     views.forEach((view) => {

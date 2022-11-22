@@ -15,7 +15,7 @@ export class ViewsController {
     const user = <UserEntity>req.user
     const view = await this.viewsService.create(createViewDto, user)
 
-    return res.status(200).json(view).end()
+    return res.status(201).json(view).end()
   }
 
   @Get()
