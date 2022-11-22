@@ -7,6 +7,110 @@
     <title>Video detail</title>
   </head>
   <body>
-    this is video detail page
+    <div id="video">
+      <div id="video-title">
+        <h3>ID:<%= video.id %></h3>
+        <h3>View Total:<%= viewTotal %></h3>
+      </div>
+      <video src="<%=video.url%>" width="320" height="240" controls></video>
+    </div>
+    <% function showComment(comment){ %>
+    <div style="margin-top: 20px; background-color: bisque">
+      <% const id = comment.id; const likedCount = comment.likedCount; const content = comment.content %>
+      <div id="comment">
+        <div id="comment-content">
+          <p>content:<%= content %></p>
+        </div>
+        <div id="comment-likes">
+          <span>liked count: <%=likedCount %> </span>
+          <button id="like-button" onclick="">like</button>
+        </div>
+      </div>
+      <div style="margin-top: 10px">
+        <input type="text" placeholder="input" />
+        <input type="submit" value="reply" id="reply-comment-<%=id%>" />
+      </div>
+    </div>
+    <% } %>
+
+    <div>
+      <% for(const comment of comments){ %>
+      <div><% const children = comment.children || []%></div>
+      <div><% showComment(comment) %></div>
+      <div>
+        <% if(children.length > 0){ %>
+        <div>
+          <% for(const child of children){ %>
+          <div style="margin-left: 20px"><% showComment(child) %></div>
+          <div><% const child2s = child.children || []%></div>
+          <div>
+            <% if(child2s.length > 0){ %>
+            <div>
+              <% for(const child2 of child2s){ %>
+              <div style="margin-left: 40px"><% showComment(child2) %></div>
+              <div><% const child3s = child2.children || []%></div>
+              <div>
+                <% if(child3s.length > 0){ %>
+                <div>
+                  <% for(const child3 of child3s){ %>
+                  <div style="margin-left: 60px"><% showComment(child3) %></div>
+                  <% } %>
+                </div>
+                <% } %>
+              </div>
+              <% } %>
+            </div>
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+
+    <div style="margin-top: 50px">
+      <input type="text" placeholder="input" id="input-comment-content" />
+      <input type="submit" value="send" id="send-comment" />
+    </div>
   </body>
+
+  <script>
+    window.onload = async function () {
+      // send view
+      const videoId = document.querySelector('#video-title h3').innerText.split(':')[1].trim()
+      const resp = await fetch(`/views?token=${localStorage.getItem('token')}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+          video_id: videoId,
+        }),
+      })
+    }
+
+    const sendCommentSubmit = document.querySelector('#send-comment')
+
+    sendCommentSubmit.addEventListener('click', async function () {
+      const content = document.querySelector('#input-comment-content').value
+      const videoId = document.querySelector('#video-title h3').innerText.split(':')[1].trim()
+      const resp = await fetch(`/comments?token=${localStorage.getItem('token')}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+          video_id: +videoId,
+          content: content,
+        }),
+      })
+      const data = await resp.json()
+      if (data) {
+        window.location.reload()
+      }
+    })
+  </script>
 </html>

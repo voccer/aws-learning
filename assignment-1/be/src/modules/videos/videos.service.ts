@@ -6,12 +6,15 @@ import { VideoEntity } from './entities/video.entity'
 import { ValidatorService } from 'shared/services/validator.service'
 import { AwsS3Service } from 'shared/services/aws-s3.service'
 import { UserEntity } from 'modules/users/entities'
+import { ViewEntity } from 'modules/views/entities/view.entity'
 
 @Injectable()
 export class VideosService {
   constructor(
     @InjectRepository(VideoEntity)
     private videosRepository: Repository<VideoEntity>,
+    @InjectRepository(ViewEntity)
+    private viewsRepository: Repository<ViewEntity>,
     private validatorService: ValidatorService,
     private awsS3Service: AwsS3Service
   ) {}
@@ -24,7 +27,6 @@ export class VideosService {
       const url = await this.awsS3Service.uploadFile(file)
       video.url = url
     }
-    console.log('video', video)
 
     return this.videosRepository.save(video)
   }
@@ -35,8 +37,40 @@ export class VideosService {
     return videos
   }
 
-  async getComments(video: VideoEntity): Promise<any> {
-    return video
+  async getViews(video: VideoEntity): Promise<ViewEntity[]> {
+    return await this.viewsRepository.find({ where: { videoId: video.id } })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getComments(_video: VideoEntity): Promise<any> {
+    return [
+      {
+        id: 1,
+        content: "I'm a comment",
+        likedCount: 1,
+        children: [],
+      },
+      {
+        id: 2,
+        content: "I'm a comment 2",
+        likedCount: 2,
+        children: [
+          {
+            id: 4,
+            content: "I'm a reply comment",
+            likedCount: 4,
+            children: [{ id: 6, content: "I'm a reply of reply comment", likedCount: 1, children: [] }],
+          },
+          { id: 5, content: "I'm a reply comment2", likedCount: 1, children: [] },
+        ],
+      },
+      {
+        id: 3,
+        content: "I'm a comment 3",
+        likedCount: 3,
+        children: [],
+      },
+    ]
   }
 
   async findOneById(id: number): Promise<VideoEntity> | null {

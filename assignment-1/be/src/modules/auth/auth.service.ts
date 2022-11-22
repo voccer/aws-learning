@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { Bcrypt } from 'shared/external'
 import { UsersService } from 'modules/users/users.service'
+import { UserEntity } from 'modules/users/entities'
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,7 @@ export class AuthService {
     return { id: user.id, email: user.email }
   }
 
-  async validateUser(email: string): Promise<any> {
+  async validateUser(email: string): Promise<UserEntity> | null {
     const user = await this.usersService.findByEmail(email)
 
     if (!user) {

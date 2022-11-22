@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { authConfig, guardConfig } from 'config'
 import { AuthService } from '../auth.service'
 import { Request } from 'express'
+import { UserEntity } from 'modules/users/entities'
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy, guardConfig.JWT) {
@@ -19,7 +20,7 @@ export class JWTStrategy extends PassportStrategy(Strategy, guardConfig.JWT) {
     })
   }
 
-  async validate({ email }): Promise<any> {
+  async validate({ email }): Promise<UserEntity> | null {
     const user = await this.authService.validateUser(email)
     if (!user) {
       throw new UnauthorizedException()

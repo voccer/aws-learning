@@ -41,10 +41,14 @@ export class VideosController {
   async show(@Req() req: Request, @Param('id') id: string, @Res() res: Response) {
     const user = <UserEntity>req.user
     const video = await this.videosService.findOneById(+id)
-    const comment = await this.videosService.getComments(video)
-    const view = video.views
+    const comments = await this.videosService.getComments(video)
+    const views = await this.videosService.getViews(video)
+    let viewTotal = 0
+    views.forEach((view) => {
+      viewTotal += view.count
+    })
 
-    return res.status(200).render('videos/id', { video, user, comment, view })
+    return res.status(200).render('videos/id', { video, user, comments, viewTotal })
   }
 
   @Delete(':id')

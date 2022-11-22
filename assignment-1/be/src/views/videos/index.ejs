@@ -17,13 +17,19 @@
         </div>
       </div>
       <div id="content">
+        <div id="upload-video">
+          <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="video" />
+            <input type="submit" value="Upload" />
+          </form>
+        </div>
         <% for(const video of videos){ %>
-        <div id="video">
-          <div id="video-title">
+        <div class="video">
+          <div class="video-title">
             <h3>ID:<%= video.id %></h3>
           </div>
-          <video src="<%=video.url%>" controls></video>
-          <div id="detail"><a href="#">show more</a></div>
+          <video src="<%=video.url%>" width="320" height="240" controls></video>
+          <div class="detail"><a href="#">show more</a></div>
         </div>
         <% } %>
       </div>
@@ -32,19 +38,41 @@
   </body>
 
   <script>
-    const showMore = document.getElementById('detail')
-    showMore.addEventListener('click', (e) => {
-      e.preventDefault()
-      const video = e.target.parentNode.parentNode
-      const videoText = video.querySelector('h3').innerText
-      const videoId = videoText.split(':')[1].trim()
-      window.location.href = `/videos/${videoId}?token=` + localStorage.getItem('token')
+    const showMoreButtons = document.querySelectorAll('.detail')
+    showMoreButtons.forEach((showMoreButton) => {
+      showMoreButton.addEventListener('click', (e) => {
+        e.preventDefault()
+        const video = e.target.parentNode.parentNode
+        const videoText = video.querySelector('h3').innerText
+        const videoId = videoText.split(':')[1].trim()
+        window.location.href = `/videos/${videoId}?token=` + localStorage.getItem('token')
+      })
     })
 
     const home = document.getElementById('home')
     home.addEventListener('click', (e) => {
       e.preventDefault()
       window.location.href = '/users/home?token=' + localStorage.getItem('token')
+    })
+
+    const uploadForm = document.getElementById('upload-video').querySelector('form')
+    uploadForm.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const formData = new FormData(uploadForm)
+      const token = localStorage.getItem('token')
+      async function upload() {
+        const res = await fetch(`/videos?token=${token}`, {
+          method: 'POST',
+          body: formData,
+        })
+
+        const data = await res.json()
+        if (data) {
+          window.location.href = '/videos?token=' + token
+        }
+      }
+
+      upload()
     })
   </script>
 </html>

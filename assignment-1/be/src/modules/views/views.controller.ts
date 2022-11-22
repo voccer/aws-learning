@@ -1,14 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param, Req, Res, UseGuards } from '@nestjs/common'
 import { ViewsService } from './views.service'
-import { CreateViewDto, UpdateViewDto } from './dto'
+import { CreateViewDto } from './dto'
+import { Request, Response } from 'express'
+import { AuthenticationGuard } from 'modules/auth/guards'
+import { UserEntity } from 'modules/users/entities'
 
 @Controller('views')
 export class ViewsController {
   constructor(private readonly viewsService: ViewsService) {}
 
   @Post()
-  create(@Body() createViewDto: CreateViewDto) {
-    return this.viewsService.create(createViewDto)
+  @UseGuards(AuthenticationGuard)
+  async create(@Body() createViewDto: CreateViewDto, @Req() req: Request, @Res() res: Response) {
+    const user = <UserEntity>req.user
+    const view = await this.viewsService.create(createViewDto, user)
+
+    return res.status(200).json(view).end()
   }
 
   @Get()
