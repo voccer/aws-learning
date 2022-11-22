@@ -37,13 +37,33 @@
 
 # Comments
 
+## Base Table
+
 - name: `comments`
 - description: `comments` is a table that contains all the comments of the system. It is saved in the Dynamodb
 
-| Name        | Type   | Content                                                                              | Default |
-| ----------- | ------ | ------------------------------------------------------------------------------------ | ------- |
-| `pk`        | String | partition key, timestamp                                                             |         |
-| `sk`        | String | sort key, `config`: comment, `reply#pk`: reply info, with pk is pk of parent comment |         |
-| `content`   | String | content of comment                                                                   |         |
-| `author_id` | BigInt | author's id                                                                          |         |
-| `liked_cnt` | BigInt | liked count                                                                          |         |
+| Name         | Type     | Content                                                          | Default |
+| ------------ | -------- | ---------------------------------------------------------------- | ------- |
+| `pk`         | String   | partition key, `video_id`                                        |         |
+| `sk`         | String   | sort key, `config#id`: comment, `reply#parent_id#id`: reply info |         |
+| `content`    | String   | content of comment                                               |         |
+| `author_id`  | BigInt   | author's id                                                      |         |
+| `liked_cnt`  | BigInt   | liked count                                                      |         |
+| `id`         | BigInt   | unique id                                                        |         |
+| `created_at` | Datetime | created at                                                       |         |
+
+## GSI CreatedAt Table
+
+- name: `CreatedAtGSI`
+
+| Field       | Type          |
+| ----------- | ------------- |
+| `data_type` | Partition key |
+| `name`      | Sort Key      |
+| `sk`        |               |
+| `is_active` |               |
+| `id`        |               |
+| `pk`        |               |
+
+- Uses Case
+  - Fetch user by data_type and name
