@@ -77,9 +77,9 @@
 | `pk`         | String   | partition key, `video_id`                                        |         |
 | `sk`         | String   | sort key, `config#id`: comment, `reply#parent_id#id`: reply info |         |
 | `content`    | String   | content of comment                                               |         |
-| `author_id`  | BigInt   | author's id                                                      |         |
-| `liked_cnt`  | BigInt   | liked count                                                      |         |
 | `id`         | BigInt   | unique id                                                        |         |
+| `user_id`    | BigInt   | user's id                                                        |         |
+| `liked_cnt`  | BigInt   | liked count                                                      |         |
 | `created_at` | Datetime | created at                                                       |         |
 | `updated_at` | Datetime | updated at                                                       |         |
 

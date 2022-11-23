@@ -9,6 +9,9 @@ import { UserEntity } from 'modules/users/entities'
 import { ViewEntity } from 'modules/views/entities/view.entity'
 import { LikeEntity } from 'modules/likes/entities'
 import { LikesService } from 'modules/likes/likes.service'
+import { CommentsService } from 'modules/comments/comments.service'
+import { CommentEntity } from 'modules/comments/entities'
+import { AttributeMap, AttributeValue } from 'aws-sdk/clients/dynamodb'
 
 @Injectable()
 export class VideosService {
@@ -21,7 +24,8 @@ export class VideosService {
     private likesRepository: Repository<LikeEntity>,
     private validatorService: ValidatorService,
     private awsS3Service: AwsS3Service,
-    private likesService: LikesService
+    private likesService: LikesService,
+    private commentsService: CommentsService
   ) {}
 
   async create(file: Express.Multer.File, user: UserEntity): Promise<VideoEntity> {
@@ -47,8 +51,58 @@ export class VideosService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async getComments(_video: VideoEntity, user: UserEntity): Promise<any> {
+  async getComments(video: VideoEntity, user: UserEntity): Promise<any> {
     const userId = user.id
+    const comments = await this.commentsService.findByVideoId(video.id.toString())
+
+    const commentIdsMap = new Map<AttributeValue, AttributeMap>()
+
+    comments.forEach((comment) => {
+      const id = comment.id
+      if (id) {
+        commentIdsMap.set(id, comment)
+      }
+    })
+
+    const rs = new Map<any, any>()
+
+    comments.forEach(async (comment) => {
+      const id = comment.id
+      const sk = comment.sk.toString()
+      if (sk.startsWith('config')) {
+        if (rs.has(id)) {
+          rs.get(id).content = comment.content
+          rs.get(id).likedCnt = comment.liked_cnt
+          rs.get(id).isLiked = await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId)
+        } else {
+          rs.set(id, {
+            id: comment.id,
+            content: comment.content,
+            likedCnt: comment.liked_cnt,
+            isLiked: await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId),
+            children: [],
+          })
+        }
+      } else if (sk.startsWith('reply')) {
+        const parentId = sk.split('#')[1]
+        if (rs.has(parentId)) {
+          rs.get(parentId).children.push({
+            id: comment.id,
+            content: comment.content,
+            likedCnt: comment.liked_cnt,
+            isLiked: await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId),
+          })
+        } else {
+          rs.set(parentId, {
+            id: comment.id,
+            content: comment.content,
+            likedCnt: comment.liked_cnt,
+            isLiked: await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId),
+            children: [],
+          })
+        }
+      }
+    })
 
     return [
       {

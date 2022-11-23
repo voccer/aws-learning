@@ -15,6 +15,7 @@ export class CommentsController {
     const user = <UserEntity>req.user
 
     const comment = await this.commentsService.create(createCommentDto, user)
+    console.log(comment)
 
     return res.status(200).json(comment).end()
   }

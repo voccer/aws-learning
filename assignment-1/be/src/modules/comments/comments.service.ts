@@ -3,6 +3,7 @@ import { CreateCommentDto } from './dto/create-comment.dto'
 import { AwsDynamoDBService } from 'shared/services/aws-dynamodb.service'
 import { UserEntity } from 'modules/users/entities'
 import { GeneratorService } from 'shared/services/generator.service'
+import { ItemList } from 'aws-sdk/clients/dynamodb'
 
 @Injectable()
 export class CommentsService {
@@ -15,12 +16,12 @@ export class CommentsService {
 
     const uuid = this.generatorService.uuid()
 
-    const pk = `${user.id}`
+    const pk = `${videoId}`
     let sk = undefined
 
     if (parentId !== '') {
       // this is reply
-      sk = `reply#${uuid}#${parentId}`
+      sk = `reply#${parentId}#${uuid}`
     } else {
       sk = `config#${uuid}`
     }
@@ -29,6 +30,11 @@ export class CommentsService {
       pk,
       sk,
       content,
+      id: uuid,
+      user_id: user.id,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      liked_cnt: 0,
     }
     const id = await this.awsDynamoDBService.upsert('comments', data)
 
@@ -37,5 +43,15 @@ export class CommentsService {
 
   findOne(id: number) {
     return `This action returns a #${id} comment`
+  }
+
+  async findByVideoId(videoId: string): Promise<ItemList> {
+    const keyConditionExpression = 'pk = :pk'
+    const expressionAttributeValues = {
+      ':pk': videoId,
+    }
+    const result = await this.awsDynamoDBService.query('comments', keyConditionExpression, expressionAttributeValues)
+
+    return result
   }
 }

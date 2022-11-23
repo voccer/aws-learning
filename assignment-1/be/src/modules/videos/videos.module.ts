@@ -10,10 +10,21 @@ import { GeneratorService } from 'shared/services/generator.service'
 import { ViewEntity } from 'modules/views/entities/view.entity'
 import { LikeEntity } from 'modules/likes/entities'
 import { LikesService } from 'modules/likes/likes.service'
+import { CommentsService } from 'modules/comments/comments.service'
+import { AwsDynamoDBService } from 'shared/services/aws-dynamodb.service'
 
 @Module({
   imports: [TypeOrmModule.forFeature([VideoEntity, ViewEntity, LikeEntity])],
   controllers: [VideosController],
-  providers: [VideosService, AwsS3Service, ValidatorService, AppConfigService, GeneratorService, LikesService],
+  providers: [
+    VideosService,
+    AwsS3Service,
+    ValidatorService,
+    AppConfigService,
+    GeneratorService,
+    LikesService,
+    CommentsService,
+    AwsDynamoDBService,
+  ],
 })
 export class VideosModule {}
