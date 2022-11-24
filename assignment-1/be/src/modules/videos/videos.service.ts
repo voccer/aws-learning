@@ -55,56 +55,6 @@ export class VideosService {
     const userId = user.id
     const comments = await this.commentsService.findByVideoId(video.id.toString())
 
-    const commentIdsMap = new Map<AttributeValue, AttributeMap>()
-
-    comments.forEach((comment) => {
-      const id = comment.id
-      if (id) {
-        commentIdsMap.set(id, comment)
-      }
-    })
-
-    const rs = new Map<any, any>()
-
-    comments.forEach(async (comment) => {
-      const id = comment.id.toString()
-      const sk = comment.sk.toString()
-      if (sk.startsWith('config')) {
-        if (rs.has(id)) {
-          rs.get(id).content = comment.content
-          rs.get(id).likedCnt = comment.liked_cnt
-          rs.get(id).isLiked = await this.likesService.checkIsLiked(id, userId)
-          rs.get(id).rank = 1
-        } else {
-          rs.set(id, {
-            id: id,
-            content: comment.content,
-            likedCnt: comment.liked_cnt,
-            isLiked: await this.likesService.checkIsLiked(id, userId),
-            children: [],
-          })
-        }
-      } else if (sk.startsWith('reply')) {
-        const parentId = sk.split('#')[1]
-        if (rs.has(parentId)) {
-          rs.get(parentId).children.push({
-            id: id,
-            content: comment.content,
-            likedCnt: comment.liked_cnt,
-            isLiked: await this.likesService.checkIsLiked(id, userId),
-          })
-        } else {
-          rs.set(parentId, {
-            id: id,
-            content: comment.content,
-            likedCnt: comment.liked_cnt,
-            isLiked: await this.likesService.checkIsLiked(id, userId),
-            children: [],
-          })
-        }
-      }
-    })
-
     return [
       {
         id: 1,

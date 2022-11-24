@@ -14,6 +14,13 @@ export class CommentsService {
     const content = createCommentDto.content
     const videoId = createCommentDto.video_id
 
+    const parentComment = await this.awsDynamoDBService.queryWithIndex('comments', '	id-pk-index', 'id = :id', {
+      ':id': parentId,
+    })
+
+    const parentCommentLevel = parentComment.level.toString()
+    const level = +parentCommentLevel + 1
+
     const uuid = this.generatorService.uuid()
 
     const pk = `${videoId}`
@@ -32,9 +39,10 @@ export class CommentsService {
       content,
       id: uuid,
       user_id: user.id,
+      level,
+      liked_cnt: 0,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      liked_cnt: 0,
     }
     const id = await this.awsDynamoDBService.upsert('comments', data)
 

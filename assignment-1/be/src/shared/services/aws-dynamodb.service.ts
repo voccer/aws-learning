@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import * as AWS from 'aws-sdk'
 import { ItemList } from 'aws-sdk/clients/dynamodb'
+import { AttributeMap } from 'aws-sdk/clients/dynamodb'
 
 @Injectable()
 export class AwsDynamoDBService {
@@ -25,5 +26,25 @@ export class AwsDynamoDBService {
     const result = await dynamodb.query(params).promise()
 
     return result.Items
+  }
+
+  async queryWithIndex(
+    tableName: string,
+    indexName: string,
+    keyConditionExpression: string,
+    expressionAttributeValues: any
+  ): Promise<AttributeMap> {
+    const dynamodb = new AWS.DynamoDB.DocumentClient()
+    const params = {
+      TableName: tableName,
+      IndexName: indexName,
+      KeyConditionExpression: keyConditionExpression,
+      ExpressionAttributeValues: expressionAttributeValues,
+    }
+    const result = await dynamodb.query(params).promise()
+
+    if (result.Items.length > 0) {
+      return result.Items[0]
+    }
   }
 }
