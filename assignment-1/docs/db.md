@@ -79,6 +79,7 @@
 | `content`    | String   | content of comment                                               |         |
 | `id`         | BigInt   | unique id                                                        |         |
 | `user_id`    | BigInt   | user's id                                                        |         |
+| `level`      | Int      | level of comment                                                 |         |
 | `liked_cnt`  | BigInt   | liked count                                                      |         |
 | `created_at` | Datetime | created at                                                       |         |
 | `updated_at` | Datetime | updated at                                                       |         |
