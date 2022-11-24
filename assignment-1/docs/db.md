@@ -14,6 +14,20 @@
 - indexes:
   - `id`: unique
 
+# Videos
+
+- name: `videos`
+- description: `videos` is a table that contains all the videos of the system. It is saved in the RDS database.
+
+| Name         | Type     | Content                                | Default |
+| ------------ | -------- | -------------------------------------- | ------- |
+| `id`         | BigInt   | primary key                            |         |
+| `user_id`    | BigInt   | user's id                              |         |
+| `video_url`  | String   | video's url is saved in S3, cloudfront |         |
+| `public`     | Boolean  | can view without login or not          |         |
+| `created_at` | Datetime | created at                             |         |
+| `updated_at` | Datetime | updated at                             |         |
+
 # Views
 
 - name: `views`
@@ -29,21 +43,9 @@
 | `updated_at` | Datetime | updated at   |         |
 
 - indexes:
+
   - `id`: unique
   - `video_id`
-
-# Videos
-
-- name: `videos`
-- description: `videos` is a table that contains all the videos of the system. It is saved in the RDS database.
-
-| Name         | Type     | Content                                | Default |
-| ------------ | -------- | -------------------------------------- | ------- |
-| `id`         | BigInt   | primary key                            |         |
-| `video_url`  | String   | video's url is saved in S3, cloudfront |         |
-| `author_id`  | BigInt   | author's id                            |         |
-| `created_at` | Datetime | created at                             |         |
-| `updated_at` | Datetime | updated at                             |         |
 
 - indexes:
   - `id`: unique
@@ -88,14 +90,32 @@
 
 - name: `CreatedAtGSI`
 
-| Field       | Type          |
-| ----------- | ------------- |
-| `data_type` | Partition key |
-| `name`      | Sort Key      |
-| `sk`        |               |
-| `is_active` |               |
-| `id`        |               |
-| `pk`        |               |
+| Field        | Type          |
+| ------------ | ------------- |
+| `created_at` | Partition key |
+| `pk`         | Sort Key      |
+| `content`    |               |
+| `user_id`    |               |
+| `level`      |               |
+| `liked_cnt`  |               |
+| `id`         |               |
 
 - Uses Case
-  - Fetch user by data_type and name
+  - Fetch comments sort by created at
+
+## GSI LikedCnt Table
+
+- name: `LikedCntGSI`
+
+| Field        | Type          |
+| ------------ | ------------- |
+| `liked_cnt`  | Partition key |
+| `pk`         | Sort Key      |
+| `content`    |               |
+| `user_id`    |               |
+| `level`      |               |
+| `created_at` |               |
+| `id`         |               |
+
+- Uses Case
+  - Fetch comments sort by liked count
