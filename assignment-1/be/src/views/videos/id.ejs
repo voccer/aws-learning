@@ -87,20 +87,22 @@
 
   <script>
     window.onload = async function () {
-      if (localStorage.getItem('send-viewable')) {
-        // send view
-        const videoId = document.querySelector('#video-title h3').innerText.split(':')[1].trim()
-        const resp = await fetch(`/views?token=${localStorage.getItem('token')}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: JSON.stringify({
-            video_id: videoId,
-          }),
-        })
+      if (localStorage.getItem('send-viewable') === false) {
+        return
       }
+
+      // send view
+      const videoId = document.querySelector('#video-title h3').innerText.split(':')[1].trim()
+      const resp = await fetch(`/views?token=${localStorage.getItem('token')}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({
+          video_id: videoId,
+        }),
+      })
     }
 
     // send comment

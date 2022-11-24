@@ -1,3 +1,3 @@
 export class DeleteLikeDto {
-  comment_id: number
+  comment_id: string
 }

@@ -26,6 +26,11 @@
       const password = document.querySelector('#password').value
       const passwordConfirmation = document.querySelector('#password-confirmation').value
 
+      if (password !== passwordConfirmation) {
+        alert('Password and password confirmation must match')
+        return
+      }
+
       async function register() {
         const res = await fetch('/auth/register', {
           method: 'POST',
@@ -42,6 +47,8 @@
 
         if (data && data['id']) {
           window.location.href = '/auth/login'
+        }else if(data && data['error']){
+          alert(data['error'])
         }
       }
 

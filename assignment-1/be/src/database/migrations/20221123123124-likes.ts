@@ -15,7 +15,7 @@ export class likes2022112323124 implements MigrationInterface {
           },
           {
             name: 'comment_id',
-            type: 'int',
+            type: 'varchar(512)',
             isNullable: false,
           },
           {

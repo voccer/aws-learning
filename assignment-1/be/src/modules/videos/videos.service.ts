@@ -67,19 +67,20 @@ export class VideosService {
     const rs = new Map<any, any>()
 
     comments.forEach(async (comment) => {
-      const id = comment.id
+      const id = comment.id.toString()
       const sk = comment.sk.toString()
       if (sk.startsWith('config')) {
         if (rs.has(id)) {
           rs.get(id).content = comment.content
           rs.get(id).likedCnt = comment.liked_cnt
-          rs.get(id).isLiked = await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId)
+          rs.get(id).isLiked = await this.likesService.checkIsLiked(id, userId)
+          rs.get(id).rank = 1
         } else {
           rs.set(id, {
-            id: comment.id,
+            id: id,
             content: comment.content,
             likedCnt: comment.liked_cnt,
-            isLiked: await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId),
+            isLiked: await this.likesService.checkIsLiked(id, userId),
             children: [],
           })
         }
@@ -87,17 +88,17 @@ export class VideosService {
         const parentId = sk.split('#')[1]
         if (rs.has(parentId)) {
           rs.get(parentId).children.push({
-            id: comment.id,
+            id: id,
             content: comment.content,
             likedCnt: comment.liked_cnt,
-            isLiked: await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId),
+            isLiked: await this.likesService.checkIsLiked(id, userId),
           })
         } else {
           rs.set(parentId, {
-            id: comment.id,
+            id: id,
             content: comment.content,
             likedCnt: comment.liked_cnt,
-            isLiked: await this.likesService.checkIsLiked(parseInt(comment.id.toString()), userId),
+            isLiked: await this.likesService.checkIsLiked(id, userId),
             children: [],
           })
         }
@@ -109,27 +110,30 @@ export class VideosService {
         id: 1,
         content: "I'm a comment",
         likedCount: 1,
-        isLiked: await this.likesService.checkIsLiked(1, userId),
+        isLiked: await this.likesService.checkIsLiked('1', userId),
+        created_at: 1669272976488,
         children: [],
       },
       {
         id: 2,
         content: "I'm a comment 2",
         likedCount: 2,
-        isLiked: await this.likesService.checkIsLiked(2, userId),
+        isLiked: await this.likesService.checkIsLiked('2', userId),
+        created_at: 1669272996488,
         children: [
           {
             id: 4,
             content: "I'm a reply comment",
             likedCount: 4,
-            isLiked: await this.likesService.checkIsLiked(4, userId),
+            isLiked: await this.likesService.checkIsLiked('4', userId),
             children: [
               {
                 id: 6,
                 content: "I'm a reply of reply comment",
                 likedCount: 1,
+                isLiked: await this.likesService.checkIsLiked('6', userId),
+                created_at: 1669272986488,
                 children: [],
-                isLiked: await this.likesService.checkIsLiked(6, userId),
               },
             ],
           },
@@ -137,8 +141,9 @@ export class VideosService {
             id: 5,
             content: "I'm a reply comment2",
             likedCount: 1,
+            isLiked: await this.likesService.checkIsLiked('5', userId),
+            created_at: 1669272996489,
             children: [],
-            isLiked: await this.likesService.checkIsLiked(5, userId),
           },
         ],
       },
@@ -146,7 +151,8 @@ export class VideosService {
         id: 3,
         content: "I'm a comment 3",
         likedCount: 3,
-        isLiked: await this.likesService.checkIsLiked(3, userId),
+        isLiked: await this.likesService.checkIsLiked('3', userId),
+        created_at: 1669272986488,
         children: [],
       },
     ]

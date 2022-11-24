@@ -24,8 +24,8 @@ export class LikeEntity {
   })
   updatedAt: Date
 
-  @Column({ name: 'comment_id', type: 'int', nullable: false })
-  commentId: number
+  @Column({ name: 'comment_id', type: 'varchar', nullable: false })
+  commentId: string
 
   @Column({ name: 'user_id', type: 'int', nullable: false })
   userId: number

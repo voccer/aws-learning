@@ -56,12 +56,17 @@ export class AuthController {
 
   @Post('register')
   async userRegister(@Body() userRegisterDto: UserRegisterDto): Promise<any> {
-    const user = await this.userService.createUser(userRegisterDto)
-
-    if (user) {
+    try {
+      const user = await this.userService.createUser(userRegisterDto)
+      if (user) {
+        return {
+          id: user.id,
+          email: user.email,
+        }
+      }
+    } catch (error) {
       return {
-        id: user.id,
-        email: user.email,
+        error: error.message,
       }
     }
   }

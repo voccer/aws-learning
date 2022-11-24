@@ -29,7 +29,7 @@ export class LikesService {
     return await this.likesRepository.delete({ commentId: deleteLikeDto.comment_id, userId: user.id })
   }
 
-  async checkIsLiked(commentId: number, userId: number): Promise<boolean> {
+  async checkIsLiked(commentId: string, userId: number): Promise<boolean> {
     const like = await this.likesRepository.findOneBy({ commentId, userId })
     if (like) {
       return true

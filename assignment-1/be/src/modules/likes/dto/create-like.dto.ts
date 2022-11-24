@@ -1,3 +1,3 @@
 export class CreateLikeDto {
-  comment_id: number
+  comment_id: string
 }

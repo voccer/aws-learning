@@ -45,6 +45,8 @@
         if (data && data['access_token']) {
           localStorage.setItem('token', data['access_token'])
           window.location.href = '/users/home?token=' + localStorage.getItem('token')
+        } else {
+          alert('Invalid email or password')
         }
       }
       login()
