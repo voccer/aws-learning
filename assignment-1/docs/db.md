@@ -19,14 +19,14 @@
 - name: `videos`
 - description: `videos` is a table that contains all the videos of the system. It is saved in the RDS database.
 
-| Name         | Type     | Content                                | Default |
-| ------------ | -------- | -------------------------------------- | ------- |
-| `id`         | BigInt   | primary key                            |         |
-| `user_id`    | BigInt   | user's id                              |         |
-| `video_url`  | String   | video's url is saved in S3, cloudfront |         |
-| `public`     | Boolean  | can view without login or not          |         |
-| `created_at` | Datetime | created at                             |         |
-| `updated_at` | Datetime | updated at                             |         |
+| Name         | Type     | Content                                            | Default |
+| ------------ | -------- | -------------------------------------------------- | ------- |
+| `id`         | BigInt   | primary key                                        |         |
+| `user_id`    | BigInt   | user's id                                          |         |
+| `video_url`  | String   | video's url is saved in S3, cloudfront             |         |
+| `status`     | Int      | can view without login or not, 1:public, 0:private |         |
+| `created_at` | Datetime | created at                                         |         |
+| `updated_at` | Datetime | updated at                                         |         |
 
 # Views
 
